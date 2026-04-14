@@ -1,7 +1,7 @@
 import { useRef, type ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Download, Upload, Globe, Moon, Sun, Layers } from 'lucide-react';
-import { db } from '../lib/db';
+import { db, decrypt } from '../lib/db';
 import CategoryManager from '../components/CategoryManager';
 
 export default function Settings({ theme, setTheme }: { theme: string, setTheme: (t: string) => void }) {
@@ -9,13 +9,22 @@ export default function Settings({ theme, setTheme }: { theme: string, setTheme:
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleExport = async () => {
-    const data = {
-      categories: await db.categories.toArray(),
-      records: await db.records.toArray(),
-      events: await db.events.toArray(),
-    };
-    
-    const blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+    const [rawCategories, rawRecords, rawEvents] = await Promise.all([
+      db.categories.toArray(),
+      db.records.toArray(),
+      db.events.toArray(),
+    ]);
+
+    const categories = rawCategories.map(c => ({ ...c, name: decrypt(c.name) }));
+    const records = rawRecords.map(r => ({
+      ...r,
+      amount: decrypt(r.amount),
+      note: decrypt(r.note),
+    }));
+    const events = rawEvents.map(e => ({ ...e, name: decrypt(e.name) }));
+
+    const data = { categories, records, events };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -95,14 +104,14 @@ export default function Settings({ theme, setTheme }: { theme: string, setTheme:
           <div className="space-y-4">
             <button
               onClick={handleExport}
-              className="flex w-full items-center justify-center gap-2 rounded-lg border px-4 py-2 hover:bg-muted"
+              className="flex w-full items-center justify-center gap-2 rounded-lg border px-4 py-3 min-h-[44px] hover:bg-muted"
             >
               <Download size={16} /> {t('export')}
             </button>
-            
+
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="flex w-full items-center justify-center gap-2 rounded-lg border px-4 py-2 hover:bg-muted"
+              className="flex w-full items-center justify-center gap-2 rounded-lg border px-4 py-3 min-h-[44px] hover:bg-muted"
             >
               <Upload size={16} /> {t('restore')}
             </button>

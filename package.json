@@ -6,10 +6,18 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:android": "npm run build && npx cap sync android",
+    "open:android": "npx cap open android",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor/android": "^8.3.0",
+    "@capacitor/app": "^8.1.0",
+    "@capacitor/cli": "^8.3.0",
+    "@capacitor/core": "^8.3.0",
+    "@capacitor/splash-screen": "^8.0.1",
+    "@capacitor/status-bar": "^8.0.2",
     "clsx": "^2.1.1",
     "crypto-js": "^4.2.0",
     "date-fns": "^3.6.0",
@@ -41,10 +49,13 @@
     "globals": "^15.9.0",
     "jsdom": "^25.0.0",
     "postcss": "^8.5.9",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.5.3",
     "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1",
-    "vitest": "^2.0.5"
+    "vite-plugin-pwa": "^1.2.0",
+    "vitest": "^2.0.5",
+    "workbox-window": "^7.4.0"
   }
 }

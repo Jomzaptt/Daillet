@@ -30,6 +30,7 @@ const resources = {
       "export": "导出数据",
       "add_category": "添加类别",
       "manage_categories": "管理类别",
+      "confirm_delete": "确定要删除这条记录吗？",
     }
   },
   en: {
@@ -60,6 +61,7 @@ const resources = {
       "export": "Export Data",
       "add_category": "Add Category",
       "manage_categories": "Manage Categories",
+      "confirm_delete": "Are you sure you want to delete this record?",
     }
   }
 };

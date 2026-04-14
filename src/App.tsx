@@ -1,9 +1,11 @@
 import { useState, useEffect, type ReactNode } from 'react';
-import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { HashRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Wallet, Banknote, Calendar, PieChart, Settings, Plus } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { Capacitor } from '@capacitor/core';
+import { App as CapacitorApp } from '@capacitor/app';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -83,7 +85,7 @@ function AppLayout({ children }: { children: ReactNode }) {
               key={item.path}
               to={item.path}
               className={cn(
-                "flex flex-col items-center gap-1 p-2 text-xs",
+                "flex flex-col items-center justify-center gap-1 min-h-[44px] px-4 text-xs",
                 isActive ? "text-primary" : "text-muted-foreground"
               )}
             >
@@ -95,7 +97,7 @@ function AppLayout({ children }: { children: ReactNode }) {
         <Link
           to="/settings"
           className={cn(
-            "flex flex-col items-center gap-1 p-2 text-xs",
+            "flex flex-col items-center justify-center gap-1 min-h-[44px] px-4 text-xs",
             location.pathname === '/settings' ? "text-primary" : "text-muted-foreground"
           )}
         >
@@ -118,6 +120,7 @@ function AppLayout({ children }: { children: ReactNode }) {
 }
 
 function App() {
+  const { i18n } = useTranslation();
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
 
   useEffect(() => {
@@ -129,8 +132,28 @@ function App() {
     localStorage.setItem('theme', theme);
   }, [theme]);
 
+  useEffect(() => {
+    document.documentElement.lang = i18n.language === 'zh' ? 'zh-CN' : 'en';
+  }, [i18n.language]);
+
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+
+    let pluginHandle: Awaited<ReturnType<typeof CapacitorApp.addListener>> | undefined;
+
+    CapacitorApp.addListener('backButton', ({ canGoBack }) => {
+      if (canGoBack) {
+        window.history.back();
+      } else {
+        CapacitorApp.exitApp();
+      }
+    }).then(h => { pluginHandle = h; });
+
+    return () => { pluginHandle?.remove(); };
+  }, []);
+
   return (
-    <BrowserRouter>
+    <HashRouter>
       <AppLayout>
         <Routes>
           <Route path="/" element={<Dashboard />} />
@@ -141,7 +164,7 @@ function App() {
           <Route path="/settings" element={<SettingsPage theme={theme} setTheme={setTheme} />} />
         </Routes>
       </AppLayout>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

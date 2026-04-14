@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(node -e \"try { require\\(''sharp''\\); console.log\\(''sharp available''\\); } catch\\(e\\) { console.log\\(''sharp not available''\\); }\")",
+      "Bash(node -e \":*)",
+      "Bash(npm run:*)",
+      "Bash(npx cap:*)",
+      "Bash(echo \"ANDROID_HOME=$ANDROID_HOME\")",
+      "Bash(echo \"ANDROID_SDK_ROOT=$ANDROID_SDK_ROOT\")",
+      "Read(//d/trae_project/Daillet_mobile/$LOCALAPPDATA/Android/**)",
+      "Read(//d/trae_project/Daillet_mobile/$HOME/AppData/Local/Android/**)",
+      "Bash(./gradlew --stacktrace)",
+      "Read(//c/Program Files/Android/Android Studio/**)",
+      "Bash(\"C:/Program Files/Android/Android Studio/bin/studio64.exe\" --version)",
+      "Read(//d/Android/**)",
+      "Bash(./gradlew assembleDebug)"
+    ]
+  }
+}

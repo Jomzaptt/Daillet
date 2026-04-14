@@ -57,3 +57,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+@supports (padding: env(safe-area-inset-bottom)) {
+  body {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

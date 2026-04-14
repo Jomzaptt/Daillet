@@ -4,7 +4,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db, decrypt } from '../lib/db';
 import { format, parseISO } from 'date-fns';
 import { zhCN, enUS } from 'date-fns/locale';
-import { Wallet, Utensils, Home, Car, Coffee, Gamepad2, ShoppingBag } from 'lucide-react';
+import { Wallet, Utensils, Home, Car, Coffee, Gamepad2, ShoppingBag, Trash2 } from 'lucide-react';
 
 const iconMap: Record<string, ElementType> = {
   Wallet, Utensils, Home, Car, Coffee, Gamepad2, ShoppingBag
@@ -29,6 +29,12 @@ export default function Dashboard() {
       .sortBy('timestamp'),
     [currentDate]
   );
+
+  const handleDelete = async (id: number) => {
+    if (confirm(t('confirm_delete') || '确定要删除这条记录吗？')) {
+      await db.records.delete(id);
+    }
+  };
 
   const totalExpense = records?.reduce((sum, record) => sum + parseFloat(decrypt(record.amount) || '0'), 0) || 0;
 
@@ -88,8 +94,16 @@ export default function Dashboard() {
                       </p>
                       {note && <p className="text-sm text-muted-foreground">{note}</p>}
                     </div>
-                    <div className="ml-auto font-medium text-destructive">
-                      -¥{amount}
+                    <div className="ml-auto flex items-center gap-3">
+                      <span className="font-medium text-destructive">
+                        -¥{amount}
+                      </span>
+                      <button
+                        onClick={() => handleDelete(record.id!)}
+                        className="flex h-11 w-11 items-center justify-center rounded text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                      >
+                        <Trash2 size={18} />
+                      </button>
                     </div>
                   </div>
                 );

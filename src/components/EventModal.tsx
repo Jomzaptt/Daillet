@@ -24,7 +24,7 @@ export default function EventModal({ onClose }: { onClose: () => void }) {
       <div className="w-full max-w-md rounded-t-2xl bg-background p-6 shadow-xl sm:rounded-2xl">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-xl font-bold">新建专题</h2>
-          <button onClick={onClose} className="rounded-full p-2 hover:bg-muted">
+          <button onClick={onClose} className="flex h-11 w-11 items-center justify-center rounded-full hover:bg-muted">
             <X size={20} />
           </button>
         </div>

@@ -58,7 +58,7 @@ export default function Events() {
                 </div>
                 <button
                   onClick={(e) => handleDelete(e, event.id!)}
-                  className="rounded-full p-2 text-muted-foreground opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
+                  className="rounded-full p-2 text-muted-foreground transition-opacity hover:bg-destructive/10 hover:text-destructive md:opacity-0 md:group-hover:opacity-100"
                 >
                   <Trash2 size={18} />
                 </button>
